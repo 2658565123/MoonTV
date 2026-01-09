@@ -52,6 +52,7 @@ export async function GET(request: Request) {
       headers,
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('图片代理错误:', error);
     return NextResponse.json(
       { error: 'Error fetching image' },

@@ -1176,8 +1176,12 @@ function PlayPageClient() {
           };
 
           // 删除可能的 ArtPlayer 缓存数据库
-          deleteDB('artplayer').catch(() => {});
-          deleteDB('artplayer_settings').catch(() => {});
+          deleteDB('artplayer').catch(() => {
+            // 忽略删除失败的错误
+          });
+          deleteDB('artplayer_settings').catch(() => {
+            // 忽略删除失败的错误
+          });
         }
 
         // 清理 localStorage 中的播放器设置

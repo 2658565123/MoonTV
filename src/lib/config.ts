@@ -14,6 +14,12 @@ export interface ApiSite {
 
 interface ConfigFileStruct {
   cache_time?: number;
+  site_name?: string;
+  announcement?: string;
+  search_downstream_max_page?: number;
+  site_interface_cache_time?: number;
+  image_proxy?: string;
+  douban_proxy?: string;
   api_site: {
     [key: string]: ApiSite;
   };
@@ -158,6 +164,8 @@ async function initConfig() {
             SearchDownstreamMaxPage:
               Number(process.env.NEXT_PUBLIC_SEARCH_MAX_PAGE) || 5,
             SiteInterfaceCacheTime: fileConfig.cache_time || 7200,
+            ImageProxy: fileConfig.image_proxy || '',
+            DoubanProxy: fileConfig.douban_proxy || '',
           },
           UserConfig: {
             AllowRegister: process.env.NEXT_PUBLIC_ENABLE_REGISTER === 'true',
@@ -195,6 +203,8 @@ async function initConfig() {
         SearchDownstreamMaxPage:
           Number(process.env.NEXT_PUBLIC_SEARCH_MAX_PAGE) || 5,
         SiteInterfaceCacheTime: fileConfig.cache_time || 7200,
+        ImageProxy: fileConfig.image_proxy || '',
+        DoubanProxy: fileConfig.douban_proxy || '',
       },
       UserConfig: {
         AllowRegister: process.env.NEXT_PUBLIC_ENABLE_REGISTER === 'true',

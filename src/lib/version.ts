@@ -2,7 +2,7 @@
 
 'use client';
 
-const CURRENT_VERSION = '20260109210644';
+const CURRENT_VERSION = '20260109212349';
 
 // 版本检查结果枚举
 export enum UpdateStatus {
@@ -12,7 +12,7 @@ export enum UpdateStatus {
 }
 
 // 远程版本检查URL配置
-const VERSION_CHECK_URLS = [
+const _VERSION_CHECK_URLS = [
   'https://ghfast.top/raw.githubusercontent.com/senshinya/MoonTV/main/VERSION.txt',
   'https://raw.githubusercontent.com/senshinya/MoonTV/main/VERSION.txt',
 ];
@@ -31,7 +31,7 @@ export async function checkForUpdates(): Promise<UpdateStatus> {
  * @param url - 版本信息URL
  * @returns Promise<string | null> - 版本字符串或null
  */
-async function fetchVersionFromUrl(url: string): Promise<string | null> {
+async function _fetchVersionFromUrl(url: string): Promise<string | null> {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
@@ -63,7 +63,7 @@ async function fetchVersionFromUrl(url: string): Promise<string | null> {
  * @param remoteVersion - 远程版本号
  * @returns UpdateStatus - 返回版本比较结果
  */
-function compareVersions(remoteVersion: string): UpdateStatus {
+function _compareVersions(remoteVersion: string): UpdateStatus {
   try {
     // 将版本号转换为数字进行比较
     const current = parseInt(CURRENT_VERSION, 10);

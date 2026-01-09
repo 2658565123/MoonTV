@@ -2,7 +2,7 @@ import UserAgent from 'user-agents';
 
 // 缓存一个 User-Agent 实例，避免频繁生成
 let cachedUserAgent: string | null = null;
-let cacheExpiry: number = 0;
+let cacheExpiry = 0;
 const CACHE_DURATION = 1000 * 60 * 60; // 缓存 1 小时
 
 /**
@@ -23,10 +23,11 @@ export function getRealUserAgent(): string {
     platform: 'Windows',
   });
 
-  cachedUserAgent = ua.toString();
+  const userAgent = ua.toString();
+  cachedUserAgent = userAgent;
   cacheExpiry = now + CACHE_DURATION;
 
-  return cachedUserAgent;
+  return userAgent;
 }
 
 /**
@@ -36,12 +37,13 @@ export function getRealUserAgent(): string {
  */
 export function getDoubanHeaders(): Record<string, string> {
   return {
-    'Accept': 'application/json, text/plain, */*',
+    Accept: 'application/json, text/plain, */*',
     'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
     'Cache-Control': 'no-cache',
-    'Pragma': 'no-cache',
-    'Referer': 'https://movie.douban.com/',
-    'sec-ch-ua': '"Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"',
+    Pragma: 'no-cache',
+    Referer: 'https://movie.douban.com/',
+    'sec-ch-ua':
+      '"Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"',
     'sec-ch-ua-mobile': '?0',
     'sec-ch-ua-platform': '"Windows"',
     'sec-fetch-dest': 'empty',
@@ -57,12 +59,13 @@ export function getDoubanHeaders(): Record<string, string> {
  */
 export function getDoubanImageHeaders(): Record<string, string> {
   return {
-    'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+    Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
     'Accept-Language': 'zh-CN,zh;q=0.9',
     'Cache-Control': 'no-cache',
-    'Pragma': 'no-cache',
-    'Referer': 'https://movie.douban.com/explore',
-    'sec-ch-ua': '"Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"',
+    Pragma: 'no-cache',
+    Referer: 'https://movie.douban.com/explore',
+    'sec-ch-ua':
+      '"Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"',
     'sec-ch-ua-mobile': '?0',
     'sec-ch-ua-platform': '"Windows"',
     'sec-fetch-dest': 'image',

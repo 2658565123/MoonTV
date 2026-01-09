@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm typecheck)",
+      "Bash(pnpm gen:runtime)",
+      "Bash(pnpm lint:fix)",
+      "Bash(git add:*)"
+    ]
+  }
+}

@@ -51,6 +51,7 @@ pnpm gen:manifest
 - **Cloudflare D1**: Cloudflare 的 SQLite 边缘数据库
 
 存储类型通过环境变量 `NEXT_PUBLIC_STORAGE_TYPE` 控制。存储实现在：
+
 - [src/lib/db.client.ts](src/lib/db.client.ts) - LocalStorage 实现
 - [src/lib/redis.db.ts](src/lib/redis.db.ts) - Redis 实现
 - [src/lib/upstash.db.ts](src/lib/upstash.db.ts) - Upstash 实现
@@ -74,6 +75,7 @@ pnpm gen:manifest
 - **PWA 支持**: 通过 next-pwa 实现，提供离线缓存和安装能力
 
 API 路由位于 [src/app/api/](src/app/api/)：
+
 - `api/search/` - 多源聚合搜索，支持 20+ API 站点
 - `api/admin/` - 管理员配置管理
 - `api/favorites/` - 收藏功能
@@ -89,12 +91,14 @@ API 路由位于 [src/app/api/](src/app/api/)：
 ### 用户认证系统
 
 认证逻辑在 [src/lib/auth.ts](src/lib/auth.ts)，支持：
+
 - 密码加密存储
 - Session 管理（通过环境变量 PASSWORD 控制全局访问）
 - 用户角色：owner（站长）、admin（管理员）、user（普通用户）
 - 注册开关：通过 `NEXT_PUBLIC_ENABLE_REGISTER` 控制
 
 **重要安全提醒**：
+
 - 生产环境必须设置 PASSWORD 环境变量
 - 仅限个人使用，不应公开访问
 - 遵守当地法律法规
@@ -102,6 +106,7 @@ API 路由位于 [src/app/api/](src/app/api/)：
 ### 中间件
 
 [src/middleware.ts](src/middleware.ts) 处理：
+
 - 全局密码验证（PASSWORD 环境变量）
 - 用户认证检查
 - 路由保护
@@ -122,7 +127,7 @@ API 路由位于 [src/app/api/](src/app/api/)：
 - 需要 nodejs_compat 兼容性标志
 - 支持 D1 数据库绑定（变量名：DB）
 
-D1 数据库初始化 SQL 见根目录的 [D1初始化.md](D1初始化.md)
+D1 数据库初始化 SQL 见根目录的 [D1 初始化.md](D1初始化.md)
 
 ### Vercel 部署
 
@@ -135,6 +140,7 @@ D1 数据库初始化 SQL 见根目录的 [D1初始化.md](D1初始化.md)
 ## 类型系统
 
 核心类型定义在 [src/lib/types.ts](src/lib/types.ts)：
+
 - `PlayRecord` - 播放记录
 - `Favorite` - 收藏
 - `SearchResult` - 搜索结果
@@ -169,20 +175,24 @@ D1 数据库初始化 SQL 见根目录的 [D1初始化.md](D1初始化.md)
 ## 常见问题解决
 
 ### 依赖安装失败
+
 - 使用 pnpm 而非 npm：`pnpm install`
 - 如遇 peer dependency 警告，可使用 `pnpm install --legacy-peer-deps`
 
 ### 构建失败
+
 - 确保已运行 `pnpm gen:runtime`
 - 检查 Node.js 版本（推荐 20.x）
 - 清理缓存：`rm -rf .next && pnpm build`
 
 ### Cloudflare Pages 部署失败
+
 - 确保构建命令为：`pnpm install --frozen-lockfile && pnpm run pages:build`
 - 检查兼容性标志设置为 nodejs_compat
 - 确认 D1 绑定变量名为 DB
 
 ### 类型错误
+
 - 运行 `pnpm typecheck` 查看详细错误
 - 确保 `src/lib/runtime.ts` 已生成
 - 检查 @types/react 和 @types/react-dom 版本兼容性

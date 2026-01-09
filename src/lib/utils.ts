@@ -16,7 +16,6 @@ export function processImageUrl(originalUrl: string): string {
   return originalUrl;
 }
 
-
 export function cleanHtmlTags(text: string): string {
   if (!text) return '';
   return text

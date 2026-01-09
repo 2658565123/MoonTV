@@ -130,7 +130,8 @@ function handleTop250(pageStart: number) {
 
   // 使用动态生成的真实浏览器 User-Agent
   const headers = getDoubanHeaders();
-  headers.Accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8';
+  headers.Accept =
+    'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8';
 
   const fetchOptions = {
     signal: controller.signal,

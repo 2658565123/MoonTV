@@ -1,5 +1,11 @@
 {
   "cache_time": 7200,
+  "site_name": "知秋的影院",
+  "announcement": "",
+  "search_downstream_max_page": 1,
+  "site_interface_cache_time": 7200,
+  "image_proxy": "",
+  "douban_proxy": "",
   "api_site": {
     "dyttzy": {
       "api": "http://caiji.dyttzyapi.com/api.php/provide/vod",

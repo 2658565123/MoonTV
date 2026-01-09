@@ -40,7 +40,9 @@ async function fetchDoubanData(
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unknown error');
-      throw new Error(`HTTP error! Status: ${response.status}, Body: ${errorText}`);
+      throw new Error(
+        `HTTP error! Status: ${response.status}, Body: ${errorText}`
+      );
     }
 
     return await response.json();
