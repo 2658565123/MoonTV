@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { getDoubanImageHeaders } from '@/lib/user-agent';
 
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 
 // 图片代理接口 - 使用动态生成的真实浏览器 User-Agent
 export async function GET(request: Request) {

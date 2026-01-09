@@ -4,6 +4,8 @@ import { getCacheTime } from '@/lib/config';
 import { DoubanItem, DoubanResult } from '@/lib/types';
 import { getDoubanHeaders } from '@/lib/user-agent';
 
+export const runtime = 'edge';
+
 interface DoubanCategoryApiResponse {
   total: number;
   items: Array<{
@@ -51,9 +53,6 @@ async function fetchDoubanData(
     throw error;
   }
 }
-
-// 使用 Node.js runtime 而不是 Edge runtime
-export const runtime = 'nodejs';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

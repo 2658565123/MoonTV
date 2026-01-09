@@ -4,6 +4,8 @@ import { getCacheTime } from '@/lib/config';
 import { DoubanItem, DoubanResult } from '@/lib/types';
 import { getDoubanHeaders } from '@/lib/user-agent';
 
+export const runtime = 'edge';
+
 interface DoubanApiResponse {
   subjects: Array<{
     id: string;
@@ -39,8 +41,6 @@ async function fetchDoubanData(url: string): Promise<DoubanApiResponse> {
     throw error;
   }
 }
-
-export const runtime = 'nodejs';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
