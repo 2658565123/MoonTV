@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { getCacheTime } from '@/lib/config';
 import { DoubanItem, DoubanResult } from '@/lib/types';
+import { getDoubanHeaders } from '@/lib/user-agent';
 
 interface DoubanApiResponse {
   subjects: Array<{
@@ -17,15 +18,10 @@ async function fetchDoubanData(url: string): Promise<DoubanApiResponse> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
 
-  // 设置请求选项，包括信号和头部
+  // 使用动态生成的真实浏览器 User-Agent
   const fetchOptions = {
     signal: controller.signal,
-    headers: {
-      'User-Agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-      Referer: 'https://movie.douban.com/',
-      Accept: 'application/json, text/plain, */*',
-    },
+    headers: getDoubanHeaders(),
   };
 
   try {
@@ -44,7 +40,7 @@ async function fetchDoubanData(url: string): Promise<DoubanApiResponse> {
   }
 }
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -132,15 +128,13 @@ function handleTop250(pageStart: number) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10000);
 
+  // 使用动态生成的真实浏览器 User-Agent
+  const headers = getDoubanHeaders();
+  headers.Accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8';
+
   const fetchOptions = {
     signal: controller.signal,
-    headers: {
-      'User-Agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-      Referer: 'https://movie.douban.com/',
-      Accept:
-        'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    },
+    headers,
   };
 
   return fetch(target, fetchOptions)

@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 
-export const runtime = 'edge';
+import { getDoubanImageHeaders } from '@/lib/user-agent';
 
-// OrionTV 兼容接口
+export const runtime = 'nodejs';
+
+// 图片代理接口 - 使用动态生成的真实浏览器 User-Agent
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const imageUrl = searchParams.get('url');
@@ -12,12 +14,9 @@ export async function GET(request: Request) {
   }
 
   try {
+    // 使用动态生成的真实浏览器请求头
     const imageResponse = await fetch(imageUrl, {
-      headers: {
-        Referer: 'https://movie.douban.com/',
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-      },
+      headers: getDoubanImageHeaders(),
     });
 
     if (!imageResponse.ok) {
@@ -42,8 +41,8 @@ export async function GET(request: Request) {
       headers.set('Content-Type', contentType);
     }
 
-    // 设置缓存头（可选）
-    headers.set('Cache-Control', 'public, max-age=15720000, s-maxage=15720000'); // 缓存半年
+    // 设置缓存头（缓存半年）
+    headers.set('Cache-Control', 'public, max-age=15720000, s-maxage=15720000');
     headers.set('CDN-Cache-Control', 'public, s-maxage=15720000');
     headers.set('Vercel-CDN-Cache-Control', 'public, s-maxage=15720000');
 
@@ -53,6 +52,7 @@ export async function GET(request: Request) {
       headers,
     });
   } catch (error) {
+    console.error('图片代理错误:', error);
     return NextResponse.json(
       { error: 'Error fetching image' },
       { status: 500 }

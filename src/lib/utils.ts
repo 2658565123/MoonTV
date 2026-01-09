@@ -3,80 +3,19 @@
 import Hls from 'hls.js';
 
 /**
- * 获取图片代理 URL 设置
- */
-export function getImageProxyUrl(): string | null {
-  if (typeof window === 'undefined') return null;
-
-  // 本地未开启图片代理，则不使用代理
-  const enableImageProxy = localStorage.getItem('enableImageProxy');
-  if (enableImageProxy !== null) {
-    if (!JSON.parse(enableImageProxy) as boolean) {
-      return null;
-    }
-  }
-
-  const localImageProxy = localStorage.getItem('imageProxyUrl');
-  if (localImageProxy != null) {
-    return localImageProxy.trim() ? localImageProxy.trim() : null;
-  }
-
-  // 如果未设置，则使用全局对象
-  const serverImageProxy = (window as any).RUNTIME_CONFIG?.IMAGE_PROXY;
-  return serverImageProxy && serverImageProxy.trim()
-    ? serverImageProxy.trim()
-    : null;
-}
-
-/**
- * 处理图片 URL，如果设置了图片代理则使用代理
+ * 处理图片 URL，使用本地 API 代理访问豆瓣图片
  */
 export function processImageUrl(originalUrl: string): string {
   if (!originalUrl) return originalUrl;
 
-  const proxyUrl = getImageProxyUrl();
-  if (!proxyUrl) return originalUrl;
-
-  return `${proxyUrl}${encodeURIComponent(originalUrl)}`;
-}
-
-/**
- * 获取豆瓣代理 URL 设置
- */
-export function getDoubanProxyUrl(): string | null {
-  if (typeof window === 'undefined') return null;
-
-  // 本地未开启豆瓣代理，则不使用代理
-  const enableDoubanProxy = localStorage.getItem('enableDoubanProxy');
-  if (enableDoubanProxy !== null) {
-    if (!JSON.parse(enableDoubanProxy) as boolean) {
-      return null;
-    }
+  // 如果是豆瓣图片，使用本地 API 代理
+  if (originalUrl.includes('doubanio.com')) {
+    return `/api/image-proxy?url=${encodeURIComponent(originalUrl)}`;
   }
 
-  const localDoubanProxy = localStorage.getItem('doubanProxyUrl');
-  if (localDoubanProxy != null) {
-    return localDoubanProxy.trim() ? localDoubanProxy.trim() : null;
-  }
-
-  // 如果未设置，则使用全局对象
-  const serverDoubanProxy = (window as any).RUNTIME_CONFIG?.DOUBAN_PROXY;
-  return serverDoubanProxy && serverDoubanProxy.trim()
-    ? serverDoubanProxy.trim()
-    : null;
+  return originalUrl;
 }
 
-/**
- * 处理豆瓣 URL，如果设置了豆瓣代理则使用代理
- */
-export function processDoubanUrl(originalUrl: string): string {
-  if (!originalUrl) return originalUrl;
-
-  const proxyUrl = getDoubanProxyUrl();
-  if (!proxyUrl) return originalUrl;
-
-  return `${proxyUrl}${encodeURIComponent(originalUrl)}`;
-}
 
 export function cleanHtmlTags(text: string): string {
   if (!text) return '';

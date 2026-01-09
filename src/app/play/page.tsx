@@ -1158,6 +1158,38 @@ function PlayPageClient() {
     }
 
     try {
+      // 清理 ArtPlayer 缓存，避免倍速设置被缓存
+      // 清理 IndexedDB 中的播放器设置
+      try {
+        if (typeof window !== 'undefined' && window.indexedDB) {
+          // 尝试删除 ArtPlayer 的 IndexedDB 数据库
+          const deleteDB = (dbName: string) => {
+            return new Promise((resolve, reject) => {
+              const req = indexedDB.deleteDatabase(dbName);
+              req.onsuccess = () => resolve(true);
+              req.onerror = () => reject(req.error);
+              req.onblocked = () => {
+                console.warn(`数据库 ${dbName} 删除被阻塞，请关闭其他标签页`);
+                resolve(false);
+              };
+            });
+          };
+
+          // 删除可能的 ArtPlayer 缓存数据库
+          deleteDB('artplayer').catch(() => {});
+          deleteDB('artplayer_settings').catch(() => {});
+        }
+
+        // 清理 localStorage 中的播放器设置
+        if (typeof window !== 'undefined' && window.localStorage) {
+          localStorage.removeItem('artplayer_settings');
+          localStorage.removeItem('artplayer_volume');
+          localStorage.removeItem('artplayer_playbackRate');
+        }
+      } catch (error) {
+        console.warn('清理播放器缓存失败:', error);
+      }
+
       // 创建新的播放器实例
       Artplayer.PLAYBACK_RATE = [0.5, 0.75, 1, 1.25, 1.5, 2, 3];
       Artplayer.USE_RAF = true;
@@ -1349,6 +1381,11 @@ function PlayPageClient() {
       // 监听播放器事件
       artPlayerRef.current.on('ready', () => {
         setError(null);
+
+        // 重置倍速为 1，避免从缓存读取之前的倍速设置
+        if (artPlayerRef.current.video) {
+          artPlayerRef.current.video.playbackRate = 1;
+        }
       });
 
       artPlayerRef.current.on('video:volumechange', () => {

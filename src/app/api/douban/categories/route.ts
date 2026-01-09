@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { getCacheTime } from '@/lib/config';
 import { DoubanItem, DoubanResult } from '@/lib/types';
+import { getDoubanHeaders } from '@/lib/user-agent';
 
 interface DoubanCategoryApiResponse {
   total: number;
@@ -26,16 +27,10 @@ async function fetchDoubanData(
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
 
-  // 设置请求选项，包括信号和头部
+  // 使用动态生成的真实浏览器 User-Agent
   const fetchOptions = {
     signal: controller.signal,
-    headers: {
-      'User-Agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-      Referer: 'https://movie.douban.com/',
-      Accept: 'application/json, text/plain, */*',
-      Origin: 'https://movie.douban.com',
-    },
+    headers: getDoubanHeaders(),
   };
 
   try {
@@ -44,7 +39,8 @@ async function fetchDoubanData(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      const errorText = await response.text().catch(() => 'Unknown error');
+      throw new Error(`HTTP error! Status: ${response.status}, Body: ${errorText}`);
     }
 
     return await response.json();
@@ -54,7 +50,8 @@ async function fetchDoubanData(
   }
 }
 
-export const runtime = 'edge';
+// 使用 Node.js runtime 而不是 Edge runtime
+export const runtime = 'nodejs';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
